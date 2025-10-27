@@ -1,0 +1,2353 @@
+openapi: 3.0.4
+info:
+  title: Unified Data Service
+  version: v1
+paths:
+  /itwin/{iTwinId}/classes:
+    post:
+      tags: [Classes]
+      summary: Create a new Class.
+      operationId: create-class
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassCreateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassGetResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    get:
+      tags: [Classes]
+      summary: Returns all Classes.
+      operationId: get-classes
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassesGetResponse'
+
+  /itwin/{iTwinId}/classes/{id}:
+    get:
+      tags: [Classes]
+      summary: Returns the latest version of a Class.
+      operationId: get-class
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassGetResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    put:
+      tags: [Classes]
+      summary: Update a Class.
+      operationId: update-class
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassCreateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassGetResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    delete:
+      tags: [Classes]
+      summary: Delete a Class.
+      operationId: delete-class
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/classes/{id}/inheritance:
+    get:
+      tags: [Classes]
+      summary: Get inheritance chain for a Class.
+      operationId: get-class-inheritance
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassInheritanceResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/classes/{id}/validate:
+    post:
+      tags: [Classes]
+      summary: Validate a Class draft (attributes, rules, relationships).
+      operationId: validate-class
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassValidationRequest'
+      responses:
+        '200':
+          description: Validation results.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassValidationResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/classes/{id}/relationships:
+    get:
+      tags: [Relationships]
+      summary: List relationships for a class.
+      operationId: list-class-relationships
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreateClassAttributeRelationship'
+
+  /itwin/{iTwinId}/classes/{id}/attributes:
+    get:
+      tags: [Attributes]
+      summary: List attributes for a class.
+      operationId: list-class-attributes
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClassAttributeResponse'
+    post:
+      tags: [Attributes]
+      summary: Add an attribute to a class.
+      operationId: add-class-attribute
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassAttributeRequest'
+      responses:
+        '201':
+          description: Created
+
+  /itwin/{iTwinId}/classes/{id}/attributes/{attributeName}:
+    get:
+      tags: [Relationships]
+      summary: List relationship definitions used by this Class (direct + inherited).
+      operationId: get-class-relationships
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: attributeName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassRelationshipsResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    delete:
+      tags: [Attributes]
+      summary: Remove an attribute from a class.
+      operationId: delete-class-attribute
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: attributeName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+
+  /itwin/{iTwinId}/relationship-types:
+    get:
+      tags: [Relationships]
+      summary: List Relationship Types.
+      operationId: get-relationship-types
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationshipTypesGetResponse'
+    post:
+      tags: [Relationships]
+      summary: Create a Relationship Type.
+      operationId: create-relationship-type
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelationshipTypeCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationshipTypeResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/relationship-types/{id}:
+    get:
+      tags: [Relationships]
+      summary: Get a Relationship Type.
+      operationId: get-relationship-type
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationshipTypeResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/termsets:
+    get:
+      tags: [Termsets]
+      summary: List Termsets.
+      operationId: get-termsets
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsetsGetResponse'
+    post:
+      tags: [Termsets]
+      summary: Create a Termset.
+      operationId: create-termset
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TermsetCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsetResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/termsets/{id}:
+    get:
+      tags: [Termsets]
+      summary: Get a Termset (latest version).
+      operationId: get-termset
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsetResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/termsets/{id}/versions:
+    post:
+      tags: [Termsets]
+      summary: Create new Termset version (draft).
+      operationId: create-termset-version
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TermsetVersionCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsetResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    get:
+      tags: [Termsets]
+      summary: List versions of a Termset.
+      operationId: get-termset-versions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsetVersionsGetResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/termsets/{id}/versions/{version}:
+    get:
+      tags: [Termsets]
+      summary: Get specific Termset version.
+      operationId: get-termset-version
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsetResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    post:
+      tags: [Termsets]
+      summary: Publish Termset version.
+      operationId: publish-termset-version
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/entities:
+    get:
+      tags: [Entities]
+      summary: Returns a paged list of Entities.
+      operationId: entities
+      parameters:
+        - name: id
+          in: query
+          description: The unique identifier of the Class which the entities conform to.
+          schema:
+            type: string
+            example: 08f07d42-910a-4f00-bbb3-430788520534
+        - name: Top
+          in: query
+          description: Maximum number of Entities to return. Default is 100. Maximum is 1000.
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 1000
+        - name: Skip
+          in: query
+          description: number of Entities to skip. Default is 0.
+          schema:
+            type: integer
+            format: int32
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedEntitiesResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/entities/search:
+    post:
+      tags: [Entities]
+      summary: Search Entities by search term.
+      operationId: get-entities
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchEntitiesRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EntitiesResponse'
+
+  /itwin/{iTwinId}/entities/load:
+    post:
+      tags: [Entities]
+      operationId: entity-load
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/entities/load/{loadId}/entity-events:
+    post:
+      tags: [Entities]
+      parameters:
+        - name: loadId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityEventsRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/entities/load/{loadId}/start:
+    post:
+      tags: [Entities]
+      parameters:
+        - name: loadId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    get:
+      tags: [Relationships]
+      summary: List relationships discovered for this load.
+      operationId: get-entity-load-relationships
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: loadId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreateClassAttributeRelationship'
+
+  /itwin/{iTwinId}/classes/{id}/relationships/{relationshipTypeCode}:
+    delete:
+      tags: [Relationships]
+      summary: Remove a relationship from a class.
+      operationId: delete-class-relationship
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: relationshipTypeCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+
+  /itwin/{iTwinId}/classes/{id}/versions:
+    post:
+      tags: [Classes]
+      summary: Create a new Class version in draft state.
+      operationId: create-class-version
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassVersionCreateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassGetResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    get:
+      tags: [Classes]
+      summary: Returns list of Class versions.
+      operationId: get-class-versions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassVersionsGetResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/classes/{id}/versions/{version}:
+    get:
+      tags: [Classes]
+      summary: Get a Class version.
+      operationId: get-class-version
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassGetResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    put:
+      tags: [Classes]
+      summary: Update Class version. (Not implemented)
+      operationId: update-class-version
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+
+  /itwin/{iTwinId}/classes/{id}/versions/{version}/publish:
+    post:
+      tags: [Classes]
+      summary: Publish a Class version.
+      operationId: publish-class-version
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/classes/{id}/versions/{version}/archive:
+    get:
+      tags: [Classes]
+      summary: Archive a Class version.
+      operationId: archive-class-version
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+    delete:
+      tags: [Classes]
+      summary: Delete a Class version archive.
+      operationId: delete-class-version-archive
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+  /itwin/{iTwinId}/classes/{id}/duplicate:
+    post:
+      summary: Duplicate a Class within or to another iTwin.
+      tags: [Classes]
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                targetITwinId:
+                  type: string
+                  description: "Optional. Target iTwin for duplication. If omitted, duplicates within current iTwin."
+      responses:
+        '201':
+          description: Class duplicated
+  /itwin/{iTwinId}/classes/{id}/toggle:
+    post:
+      summary: Enable or disable a Class within an iTwin.
+      tags: [Classes]
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                  description: "True to enable, false to disable."
+      responses:
+        '200':
+          description: Toggled
+  /itwin/{iTwinId}/classes/hierarchy:
+    get:
+      tags: [Classes]
+      summary: Get the full class hierarchy tree.
+      operationId: get-class-hierarchy-tree
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Class hierarchy tree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassHierarchyNode'
+
+  /itwin/{iTwinId}/classes/{id}/children:
+    get:
+      tags: [Classes]
+      summary: Get child classes of a class.
+      operationId: get-class-children
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of child classes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClassesGetResponse.ClassResponse'
+
+  # --- TERMSET/TAXONOMY HIERARCHY ENDPOINTS ---
+  /itwin/{iTwinId}/termsets/{id}/hierarchy:
+    get:
+      tags: [Termsets]
+      summary: Get the full termset hierarchy tree.
+      operationId: get-termset-hierarchy-tree
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Termset hierarchy tree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermHierarchyNode'
+
+  /itwin/{iTwinId}/termsets/{id}/terms/{termKey}/children:
+    get:
+      tags: [Termsets]
+      summary: Get child terms of a term.
+      operationId: get-term-children
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: termKey
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of child terms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Term'
+
+  /itwin/{iTwinId}/classes/{id}/canonical:
+    get:
+      tags: [Classes]
+      summary: Get the canonical, fully resolved view of a Class including all inherited attributes, expanded relationships, and metadata.
+      operationId: get-class-canonical
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Canonical Class view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanonicalClassResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /itwin/{iTwinId}/entities/{id}/canonical:
+    get:
+      tags: [Entities]
+      summary: Get the canonical, fully resolved view of an Entity including resolved attributes, expanded relationships, and metadata.
+      operationId: get-entity-canonical
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Canonical Entity view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanonicalEntityResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+components:
+  securitySchemes:
+    Bearer:
+      type: http
+      description: Enter JWT Bearer token with the required OIDC scopes.
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ApiErrorResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/BasicApiError'
+      additionalProperties: false
+
+    BasicApiError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        target:
+          type: string
+          nullable: true
+      additionalProperties: false
+
+    ClassCreateRequest:
+      type: object
+      description: The new Class to create.
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Unique code for this type.
+          example: ASSET
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: The name of the Class.
+          example: Asset
+        description:
+          type: string
+          minLength: 0
+          maxLength: 255
+          description: The description for the Class.
+          example: A resource owned by an organization.
+        baseClassCode:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: The base Class to inherit from.
+          nullable: true
+          example: 842fc765-afe2-40bf-8f0e-4730963f028a
+        baseClassVersion:
+          type: integer
+          format: int32
+          nullable: true
+          description: The base Class definition version to inherit from.
+          example: 1
+        parentClassId:
+          type: string
+          description: "ID of the parent class for hierarchy (optional)"
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassAttributeRequest'
+
+    ClassGetResponse:
+      type: object
+      description: Represents the response containing class information retrieved from a data source.
+      additionalProperties: false
+      required:
+        - class
+      properties:
+        class:
+          $ref: '#/components/schemas/ClassGetResponse.ClassResponse'
+
+    ClassGetResponse.ClassResponse:
+      type: object
+      description: A Class representing a data type.
+      additionalProperties: false
+      required:
+        - attributes
+        - baseid
+        - baseClassVersion
+        - code
+        - description
+        - id
+        - name
+        - state
+        - version
+      properties:
+        id:
+          type: string
+          description: The id for the Class.
+          example: 9c13f053-7c56-4f85-b3b4-fdbac9d7938d
+        code:
+          type: string
+          description: Unique code for this type.
+          example: ASSET
+        name:
+          type: string
+          description: The name of the Class.
+          example: Asset
+        description:
+          type: string
+          description: The description of the Class.
+          example: Asset
+        version:
+          type: integer
+          format: int32
+          description: The Class definition version.
+          example: 1
+        baseid:
+          type: string
+          description: The base Class to inherit from.
+          nullable: true
+          example: 842fc765-afe2-40bf-8f0e-4730963f028a
+        baseClassVersion:
+          type: integer
+          format: int32
+          nullable: true
+          description: The base Class definition version to inherit from.
+          example: 1
+        state:
+          $ref: '#/components/schemas/ClassGetResponse.ClassVersionStateResponse'
+        attributes:
+          type: array
+          description: The attributes defined for the Class definition.
+          items:
+            $ref: '#/components/schemas/ClassAttributeResponse'
+
+    ClassGetResponse.ClassVersionStateResponse:
+      type: string
+      enum:
+        - draft
+        - published
+        - archived
+
+    ClassAttributeRequest:
+      type: object
+      description: Represents a request to define an attribute for a class, including its name, type, validation rules, and relationships.
+      additionalProperties: false
+      required:
+        - required
+      properties:
+        name:
+          type: string
+          description: The name of the attribute.
+          example: assetName
+        displayName:
+          type: string
+          description: The display name of the attribute.
+          example: Asset Name
+        description:
+          type: string
+          description: The description name of the attribute.
+          example: The name of the Asset
+        type:
+          $ref: '#/components/schemas/AttributeTypeRequest'
+        required:
+          type: boolean
+          description: Is the attribute mandatory.
+        array:
+          type: boolean
+          description: Is the attribute an array of the defined type.
+        rules:
+          type: array
+          nullable: true
+          description: Validation rules to apply to the attribute.
+          items:
+            $ref: '#/components/schemas/ValidationRuleRequest'
+        attributes:
+          type: array
+          nullable: true
+          description: Child attribute, only valid for 'object' attribute types.
+          items:
+            $ref: '#/components/schemas/ClassAttributeRequest'
+        relationship:
+          $ref: '#/components/schemas/CreateClassAttributeRelationship'
+        termset:
+          $ref: '#/components/schemas/TermsetReference'
+
+    AttributeTypeRequest:
+      type: string
+      enum:
+        - string
+        - integer
+        - number
+        - boolean
+        - date-time
+        - object
+
+    ClassAttributeResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - required
+      properties:
+        name:
+          type: string
+          description: The name of the attribute.
+          example: assetName
+        displayName:
+          type: string
+          description: The display name of the attribute.
+          example: Asset Name
+        description:
+          type: string
+          description: The description name of the attribute.
+          example: The name of the Asset
+        type:
+          $ref: '#/components/schemas/ClassAttributeResponse.AttributeType'
+        required:
+          type: boolean
+          description: Is the attribute mandatory.
+        array:
+          type: boolean
+          description: Is the attribute an array of the defined type.
+        rules:
+          type: array
+          nullable: true
+          description: Validation rules to apply to the attribute.
+          items:
+            $ref: '#/components/schemas/ClassAttributeResponse.ValidationRule'
+        attributes:
+          type: array
+          nullable: true
+          description: Child attributes, only valid for 'object' attribute types.
+          items:
+            $ref: '#/components/schemas/ClassAttributeResponse'
+
+    ClassAttributeResponse.AttributeType:
+      type: string
+      enum:
+        - string
+        - integer
+        - number
+        - boolean
+        - date-time
+        - object
+
+    ClassAttributeResponse.ValidationRule:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - values
+      properties:
+        type:
+          $ref: '#/components/schemas/ClassAttributeResponse.ValidationRuleType'
+        values:
+          type: array
+          description: The value(s) used for the validation rule.
+          items:
+            type: string
+          example:
+            - '1'
+        message:
+          type: string
+          description: The validation failure message.
+          example: Asset name should be at least 1 character long.
+
+    ClassAttributeResponse.ValidationRuleType:
+      type: string
+      enum:
+        - string:length-min
+        - string:length-max
+        - array:size-min
+        - array:size-max
+        - string:regex
+        - string:in-termset
+        - number:min
+        - number:max
+        - integer:min
+        - integer:max
+        - date-time:min
+        - date-time:max
+        - value:required-if
+        - value:unique
+
+    ClassVersionCreateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        baseClassCode:
+          type: string
+          description: The base Class to inherit from.
+          nullable: true
+          example: ASSET
+        baseClassVersion:
+          type: integer
+          format: int32
+          description: The base Class version to inherit from.
+          nullable: true
+          example: 1
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassAttributeRequest'
+
+    ClassVersionsGetResponse:
+      type: object
+      description: Represents the response containing class information retrieved from a data source.
+      additionalProperties: false
+      required:
+        - versions
+      properties:
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassVersionsGetResponse.ClassVersionResponse'
+
+    ClassVersionsGetResponse.ClassVersionResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+      properties:
+        version:
+          type: integer
+          format: int32
+          description: The version of the Class.
+          example: 1
+        state:
+          $ref: '#/components/schemas/ClassVersionsGetResponse.ClassVersionStateResponse'
+
+    ClassVersionsGetResponse.ClassVersionStateResponse:
+      type: string
+      enum:
+        - draft
+        - published
+        - archived
+
+    ClassesGetResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - classes
+      properties:
+        classes:
+          type: array
+          description: List of found Classes.
+          items:
+            $ref: '#/components/schemas/ClassesGetResponse.ClassResponse'
+
+    ClassesGetResponse.ClassResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - description
+        - id
+        - name
+        - updatedAt
+      description: A Class representing the definition of a data type.
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the Class.
+        parentClassId:
+          type: string
+          description: "ID of the parent class for hierarchy (optional)"
+        code:
+          type: string
+          description: Unique code for this type.
+          example: ASSET
+        name:
+          type: string
+          description: The name of the Class.
+          example: Assets
+        description:
+          type: string
+          description: The description of the Class.
+          example: A resource owned by an organization.
+        updatedAt:
+          type: string
+          format: date-time
+          description: The version of the Class.
+          example: '2025-08-27T14:31:38.336909+00:00'
+    ClassHierarchyNode:
+      type: object
+      properties:
+        class:
+          $ref: '#/components/schemas/ClassesGetResponse.ClassResponse'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassHierarchyNode'
+    CreateClassAttributeRelationship:
+      type: object
+      additionalProperties: false
+      required:
+        - classCode
+      properties:
+        classCode:
+          type: string
+          description: The unique code of the Class which this attribute relates to.
+        classVersion:
+          type: integer
+          format: int32
+          description: The version of the Class definition the attribute references.
+        attribute:
+          type: string
+          description: The name of the attribute in the related Class.
+        relationshipType:
+          type: string
+          description: The display name for the type of relationship (e.g. 'Is Document Of').
+        relationshipTypeCode:
+          type: string
+          description: Code of a catalogued relationship type.
+        direction:
+          $ref: '#/components/schemas/RelationshipDirection'
+        cardinality:
+          $ref: '#/components/schemas/RelationshipCardinality'
+
+    EntitiesResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - keyInSource
+        - properties
+      properties:
+        id:
+          type: string
+        keyInSource:
+          type: string
+          description: The unique identifier of the entity.
+          example: entityCode
+        properties:
+          type: object
+          additionalProperties:
+            nullable: true
+          example:
+            property1: value1
+            property2: 123
+            property3: true
+
+    EntityEventsRequest:
+      type: object
+      description: Entity event payload
+      additionalProperties: false
+      required:
+        - events
+      properties:
+        events:
+          type: array
+          description: List of entity events to be processed.
+          items:
+            $ref: '#/components/schemas/EntityEventsRequest.EntityEventRequest'
+
+    EntityEventsRequest.EntityEventRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - classCode
+        - eventType
+        - keyInSource
+      properties:
+        keyInSource:
+          type: string
+          description: The unique identifier for the entity.
+          example: external-12345
+        classCode:
+          type: string
+          description: The code of the class to which the entity belongs.
+        eventType:
+          $ref: '#/components/schemas/EntityEventsRequest.EntityRequestType'
+        attributes:
+          type: object
+          description: The attributes of the entity.
+          additionalProperties: {}
+
+    EntityEventsRequest.EntityRequestType:
+      type: string
+      enum:
+        - Upsert
+        - Delete
+
+    Link:
+      type: object
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+
+    PagedEntitiesResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntitiesResponse'
+        _links:
+          $ref: '#/components/schemas/PaginationLinks'
+
+    PaginationLinks:
+      type: object
+      additionalProperties: false
+      required:
+        - self
+      properties:
+        self:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+
+    SearchEntitiesRequest:
+      type: object
+      description: The request to search entities.
+      additionalProperties: false
+      properties:
+        searchTerm:
+          type: string
+          description: Search term for full text search.
+          nullable: true
+          example: bridge construction
+
+    ValidationRuleRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - values
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationRuleTypeRequest'
+        values:
+          type: array
+          description: The value(s) used for the validation rule.
+          items:
+            type: string
+          example:
+            - '1'
+        message:
+          type: string
+          description: The validation failure message.
+          example: Asset name should be at least 1 character long.
+
+    ValidationRuleTypeRequest:
+      type: string
+      enum:
+        - string:length-min
+        - string:length-max
+        - array:size-min
+        - array:size-max
+        - string:regex
+        - string:in-termset
+        - number:min
+        - number:max
+        - integer:min
+        - integer:max
+        - date-time:min
+        - date-time:max
+        - value:required-if
+        - value:unique
+
+    RelationshipDirection:
+      type: string
+      enum:
+        - uni
+        - bi
+
+    RelationshipCardinality:
+      type: string
+      enum:
+        - one-to-one
+        - one-to-many
+        - many-to-one
+        - many-to-many
+
+    RelationshipTypeCreateRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - name
+        - direction
+        - cardinality
+      properties:
+        code:
+          type: string
+          minLength: 1
+          maxLength: 255
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+        direction:
+          $ref: '#/components/schemas/RelationshipDirection'
+        cardinality:
+          $ref: '#/components/schemas/RelationshipCardinality'
+        allowedSourceClassCodes:
+          type: array
+          items:
+            type: string
+        allowedTargetClassCodes:
+          type: array
+          items:
+            type: string
+
+    RelationshipTypeResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - code
+        - name
+        - direction
+        - cardinality
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        direction:
+          $ref: '#/components/schemas/RelationshipDirection'
+        cardinality:
+          $ref: '#/components/schemas/RelationshipCardinality'
+        allowedSourceClassCodes:
+          type: array
+          items:
+            type: string
+        allowedTargetClassCodes:
+          type: array
+          items:
+            type: string
+
+    RelationshipTypesGetResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - relationshipTypes
+      properties:
+        relationshipTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RelationshipTypeResponse'
+
+    ClassRelationshipsResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - relationships
+      properties:
+        relationships:
+          type: array
+          items:
+            $ref: '#/components/schemas/RelationshipUsage'
+
+    RelationshipUsage:
+      type: object
+      additionalProperties: false
+      required:
+        - attributeName
+        - relationshipTypeCode
+        - direction
+        - targetClassCode
+        - cardinality
+      properties:
+        attributeName:
+          type: string
+        relationshipTypeCode:
+          type: string
+        direction:
+          $ref: '#/components/schemas/RelationshipDirection'
+        targetClassCode:
+          type: string
+        cardinality:
+          $ref: '#/components/schemas/RelationshipCardinality'
+        inheritedFrom:
+          type: string
+          nullable: true
+          description: Class code if inherited.
+
+    Term:
+      type: object
+      additionalProperties: false
+      required:
+        - key
+        - label
+      properties:
+        key:
+          type: string
+          description: Stable programmatic key.
+        label:
+          type: string
+          description: Human readable label.
+        metadata:
+          type: object
+          description: Optional KV metadata.
+          additionalProperties: true
+        active:
+          type: boolean
+          default: true
+        parentTermKey:
+          type: string
+          description: "Key of the parent term for hierarchy (optional)"
+    TermHierarchyNode:
+      type: object
+      properties:
+        term:
+          $ref: '#/components/schemas/Term'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermHierarchyNode'
+    TermsetReference:
+      type: object
+      additionalProperties: false
+      required:
+        - termsetCode
+      properties:
+        termsetCode:
+          type: string
+        termsetVersion:
+          type: integer
+          format: int32
+          nullable: true
+          description: If omitted, resolves to latest published.
+        allowCustom:
+          type: boolean
+          default: false
+          description: Allow values not in the termset.
+
+    TermsetCreateRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - name
+      properties:
+        code:
+          type: string
+          minLength: 1
+          maxLength: 255
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+        terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Term'
+
+    TermsetVersionCreateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Term'
+
+    TermsetResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - code
+        - name
+        - version
+        - state
+        - terms
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        version:
+          type: integer
+          format: int32
+        state:
+          type: string
+          enum:
+            - draft
+            - published
+            - archived
+        terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Term'
+
+    TermsetsGetResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - termsets
+      properties:
+        termsets:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermsetResponse'
+
+    TermsetVersionsGetResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - versions
+      properties:
+        versions:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - version
+              - state
+            properties:
+              version:
+                type: integer
+                format: int32
+              state:
+                type: string
+                enum:
+                  - draft
+                  - published
+                  - archived
+              updatedAt:
+                type: string
+                format: date-time
+
+    ClassInheritanceResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - chain
+      properties:
+        chain:
+          type: array
+          description: Ordered base-to-derived chain (base first, current class last).
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - id
+              - code
+              - version
+            properties:
+              id:
+                type: string
+              code:
+                type: string
+              version:
+                type: integer
+                format: int32
+
+    ClassValidationRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        attributes:
+          type: array
+          description: Optional override set to validate against inheritance & rules.
+          items:
+            $ref: '#/components/schemas/ClassAttributeRequest'
+
+    ClassValidationResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - isValid
+        - errors
+      properties:
+        isValid:
+          type: boolean
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - path
+              - code
+              - message
+            properties:
+              path:
+                type: string
+                example: attributes[1].rules[0]
+              code:
+                type: string
+                example: rule/unsupported-for-type
+              message:
+                type: string
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/BasicApiError'
+
+    CanonicalClassResponse:
+      type: object
+      required:
+        - id
+        - code
+        - name
+        - description
+        - version
+        - attributes
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the Class.
+        code:
+          type: string
+          description: Unique code for this type.
+        name:
+          type: string
+          description: The name of the Class.
+        description:
+          type: string
+          description: The description of the Class.
+        version:
+          type: integer
+          format: int32
+          description: The Class definition version.
+        state:
+          type: string
+          enum: [draft, published, archived]
+        metadata:
+          type: object
+          description: Fully merged metadata from all inheritance levels.
+          additionalProperties: true
+        attributes:
+          type: array
+          description: All attributes (inherited and local), fully resolved including termsets and relationships.
+          items:
+            $ref: '#/components/schemas/CanonicalAttributeResponse'
+        relationships:
+          type: array
+          description: All relationships, fully expanded (not just codes/IDs).
+          items:
+            $ref: '#/components/schemas/CanonicalRelationshipResponse'
+        baseClass:
+          $ref: '#/components/schemas/BaseClassSummary'
+        parentClass:
+          $ref: '#/components/schemas/BaseClassSummary'
+        termsets:
+          type: array
+          items:
+            $ref: '#/components/schemas/CanonicalTermsetReference'
+
+    CanonicalAttributeResponse:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum: [string, integer, number, boolean, date-time, object]
+        required:
+          type: boolean
+        array:
+          type: boolean
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassAttributeResponse.ValidationRule'
+        termset:
+          $ref: '#/components/schemas/CanonicalTermsetReference'
+        relationship:
+          $ref: '#/components/schemas/CanonicalRelationshipResponse'
+        metadata:
+          type: object
+          additionalProperties: true
+
+    CanonicalRelationshipResponse:
+      type: object
+      required:
+        - type
+        - direction
+        - cardinality
+        - target
+      properties:
+        type:
+          type: string
+          description: Type of relationship.
+        direction:
+          type: string
+          enum: [uni, bi]
+        cardinality:
+          type: string
+          enum: [one-to-one, one-to-many, many-to-one, many-to-many]
+        target:
+          type: object
+          description: Expanded target class/entity information.
+          additionalProperties: true
+        attribute:
+          type: string
+          description: Name of the attribute if relationship is at attribute level.
+        metadata:
+          type: object
+          additionalProperties: true
+
+    BaseClassSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        version:
+          type: integer
+
+    CanonicalTermsetReference:
+      type: object
+      required:
+        - code
+        - terms
+      properties:
+        code:
+          type: string
+        terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/CanonicalTerm'
+        allowCustom:
+          type: boolean
+
+    CanonicalTerm:
+      type: object
+      required:
+        - key
+        - label
+      properties:
+        key:
+          type: string
+        label:
+          type: string
+        synonyms:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+          additionalProperties: true
+
+    CanonicalEntityResponse:
+      type: object
+      required:
+        - id
+        - classCode
+        - attributes
+      properties:
+        id:
+          type: string
+        classCode:
+          type: string
+        class:
+          $ref: '#/components/schemas/CanonicalClassResponse'
+        attributes:
+          type: object
+          description: All attributes with fully resolved values, termsets, and relationships.
+          additionalProperties: true
+        relationships:
+          type: array
+          items:
+            $ref: '#/components/schemas/CanonicalRelationshipResponse'
+        metadata:
+          type: object
+          additionalProperties: true
+
+security:
+  - Bearer: []
