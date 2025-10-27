@@ -351,6 +351,159 @@ paths:
         '204':
           description: No Content
 
+  /itwin/{iTwinId}/classes/{classId}/validation-failures:
+    get:
+      tags: [Validation]
+      summary: Get validation failures for all entities of a class.
+      operationId: get-class-validation-failures
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of validation failures for this class.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassValidationFailuresResponse'
+
+  /itwin/{iTwinId}/classes/{classId}/validation-failures/values:
+    get:
+      tags: [Validation]
+      summary: Get validation failure values for all entities of a class.
+      operationId: get-class-validation-failure-values
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of validation failure values for this class.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassValidationFailureValuesResponse'
+
+  # GLOBAL LEVEL
+  /itwin/{iTwinId}/validation-failures:
+    get:
+      tags: [Validation]
+      summary: Get all validation failures across all classes.
+      operationId: get-global-validation-failures
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: attribute
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: rule
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: entityId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: Top
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+        - name: Skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: List of all validation failures.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalValidationFailuresResponse'
+
+  /itwin/{iTwinId}/validation-failures/values:
+    get:
+      tags: [Validation]
+      summary: Get all validation failure values across all classes.
+      operationId: get-global-validation-failure-values
+      parameters:
+        - name: iTwinId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: attribute
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: rule
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: entityId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: Top
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+        - name: Skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: List of all validation failure values.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalValidationFailureValuesResponse'
+
   /itwin/{iTwinId}/relationship-types:
     get:
       tags: [Relationships]
@@ -1264,6 +1417,85 @@ components:
       bearerFormat: JWT
 
   schemas:
+    ClassValidationFailuresResponse:
+      type: object
+      properties:
+        failures:
+          type: array
+          items:
+            type: object
+            properties:
+              entityId:
+                type: string
+              attribute:
+                type: string
+              rule:
+                type: string
+              message:
+                type: string
+              value:
+                type: string
+
+    ClassValidationFailureValuesResponse:
+      type: object
+      properties:
+        failureValues:
+          type: array
+          items:
+            type: object
+            properties:
+              attribute:
+                type: string
+              values:
+                type: array
+                items:
+                  type: string
+              rule:
+                type: string
+              count:
+                type: integer
+
+    GlobalValidationFailuresResponse:
+      type: object
+      properties:
+        failures:
+          type: array
+          items:
+            type: object
+            properties:
+              classId:
+                type: string
+              entityId:
+                type: string
+              attribute:
+                type: string
+              rule:
+                type: string
+              message:
+                type: string
+              value:
+                type: string
+
+    GlobalValidationFailureValuesResponse:
+      type: object
+      properties:
+        failureValues:
+          type: array
+          items:
+            type: object
+            properties:
+              classId:
+                type: string
+              attribute:
+                type: string
+              values:
+                type: array
+                items:
+                  type: string
+              rule:
+                type: string
+              count:
+                type: integer
     ApiErrorResponse:
       type: object
       properties:
